@@ -1,5 +1,6 @@
 import os
 import sys
+import urllib3
 from flask import Flask, request, abort
 
 from linebot import (
