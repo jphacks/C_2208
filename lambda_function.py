@@ -83,6 +83,5 @@ def lambda_handler(event, context):
             LINE_BOT_API.reply_message(line_event.reply_token, StickerSendMessage(package_id='11537',sticker_id='52002744'))
             return
 
-
     LINE_HANDLER.handle(body, signature)
     return 0
