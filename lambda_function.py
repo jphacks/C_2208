@@ -24,20 +24,23 @@ def lambda_handler(event, context):
     body = event["body"]
 
 
+    # フォローイベント
     @LINE_HANDLER.add(FollowEvent)
-    def handle_follow(line_follow_event):
+    def follow_message(line_follow_event):
         profile = LINE_BOT_API.get_profile(line_follow_event.source.user_id)
         logger.info(profile)
+        LINE_BOT_API.reply_message(line_follow_event.reply_token, TextSendMessage(text=f'{profile.display_name}さん、フォローありがとう!\n「スタート」と送信すると問題がはじまるぞ!!'))
 
         # userName = profile["displayName"]
         userId = profile["userId"]
         LINE_BOT_API.push_message(userId, TextSendMessage(text='こんにちは！\nぼくのなまえは「まもるくん」。\n「スタート」と送信すると問題がはじまるよ!!'))
 
 
+    # メッセージイベント
     @LINE_HANDLER.add(MessageEvent, message=TextMessage)
     def on_message(line_reply_event):
-        # profile = LINE_BOT_API.get_profile(line_event.source.user_id)
-        # logger.info(profile)
+        profile = LINE_BOT_API.get_profile(line_reply_event.source.user_id)
+        logger.info(profile)
 
         message = line_reply_event.message.text.lower()
         answerlist = ["よい", "貸す", "保存する"]
