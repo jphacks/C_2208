@@ -1,5 +1,10 @@
 import os
 import logging
+import csv
+import random
+# from tkinter.messagebox import QUESTION
+import main
+filename = 'questions.csv'
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -11,11 +16,25 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, QuickReply, QuickReplyButton, MessageAction, PostbackAction, FollowEvent
 )
 
+MAX_QUESTION_NUMBER = 50        # クイズの最大問題数
+QUESTION = 10                   # 出題する問題数
+
+# 乱数生成（引数：最大問題数，欲しい問題数）
+# def random_generator(max_question_num, want_question_num):
+#     previous = []
+#     while len(previous) < want_question_num:
+#         random_num = random.randint(1, max_question_num)
+#         if not random_num in previous:
+#             previous.append(random_num)
+#     return previous
+
+
 # 環境変数からLINEBOTのシークレットキーやアクセストークン取得
 LINE_CHANNEL_ACCESS_TOKEN   = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
 LINE_CHANNEL_SECRET         = os.environ['LINE_CHANNEL_SECRET']
 LINE_BOT_API = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 LINE_HANDLER = WebhookHandler(LINE_CHANNEL_SECRET)
+
 
 # Lambdaのハンドル
 def lambda_handler(event, context):
@@ -29,11 +48,7 @@ def lambda_handler(event, context):
     def follow_message(line_follow_event):
         profile = LINE_BOT_API.get_profile(line_follow_event.source.user_id)
         logger.info(profile)
-        LINE_BOT_API.reply_message(line_follow_event.reply_token, TextSendMessage(text=f'{profile.display_name}さん、フォローありがとう!\n「スタート」と送信すると問題がはじまるぞ!!'))
-
-        # userName = profile["displayName"]
-        userId = profile["userId"]
-        LINE_BOT_API.push_message(userId, TextSendMessage(text='こんにちは！\nぼくのなまえは「まもるくん」。\n「スタート」と送信すると問題がはじまるよ!!'))
+        LINE_BOT_API.reply_message(line_follow_event.reply_token, TextSendMessage(text=f'{profile.display_name}さん、フォローありがとう!\n「問題」と送信すると問題がはじまるぞ!!'))
 
 
     # メッセージイベント
@@ -43,48 +58,51 @@ def lambda_handler(event, context):
         logger.info(profile)
 
         message = line_reply_event.message.text.lower()
-        answerlist = ["よい", "貸す", "保存する"]
-        if message == 'スタート':
-            LINE_BOT_API.reply_message(line_reply_event.reply_token,
-                TextSendMessage(text='第1問目\n知らない人から送られてきたURLはクリックしてもよい？',
-                        quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=PostbackAction(label="よい", data="よい", text="よい")),
-                            QuickReplyButton(action=PostbackAction(label="ダメ", data="ダメ", text="ダメ")),
-                        ])
-                )
-            )
-        elif message == 'ダメ':
-            LINE_BOT_API.reply_message(line_reply_event.reply_token,
-                TextSendMessage(text='第2問目\n会ったことのないインターネットのお友達がお金を貸してほしいと聞いてきたら、君は貸す？貸さない？',
-                        quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=PostbackAction(label="貸す", data="貸す", text="貸す")),
-                            QuickReplyButton(action=PostbackAction(label="貸さない", data="貸さない", text="貸さない")),
-                        ])
-                )
-            )
-        elif message == '貸さない':
-            LINE_BOT_API.reply_message(line_reply_event.reply_token,
-                TextSendMessage(text='第3問目\nインターネット上でずっと読みたかった漫画が全巻投稿されているのを発見した。\n君は保存する？しない？',
-                        quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=PostbackAction(label="保存する", data="保存する", text="保存する")),
-                            QuickReplyButton(action=PostbackAction(label="保存しない", data="保存しない", text="保存しない")),
-                        ])
-                )
-            )
-        elif message in answerlist:
-            LINE_BOT_API.reply_message(line_reply_event.reply_token,
-                TextSendMessage(text='不正解！',
-                        quick_reply=QuickReply(items=[
-                            QuickReplyButton(action=PostbackAction(label="リトライ", data="リトライ", text="スタート")),
-                        ])))
-        elif message == '保存しない':
-            LINE_BOT_API.reply_message(line_reply_event.reply_token, StickerSendMessage(package_id='8515',sticker_id='16581254'))
-            LINE_BOT_API.reply_message(line_reply_event.reply_token, TextSendMessage(text='全問正解だ!\nおめでとう!!!'))
+        class Question:
+            def __init__(self, questions_list):
+                self.questions_list = questions_list
 
-        else:
-            LINE_BOT_API.reply_message(line_reply_event.reply_token, StickerSendMessage(package_id='11537',sticker_id='52002744'))
-            return
+            def get_questions(self, num):
+                return self.questions_list[num][0]
 
+            def get_answer(self, num):
+                return self.questions_list[num][1]
+
+            def get_comment(self, num):
+                return self.questions_list[num][2]
+
+        # 出題する問題番号のリスト生成
+        question_num = random_generator(MAX_QUESTION_NUMBER, QUESTION)
+
+        # インスタンス化
+        questions = Question(main.ans_lists)
+
+        for i in question_num:
+            if message == '問題':
+                LINE_BOT_API.reply_message(line_reply_event.reply_token,
+                    TextSendMessage(text=questions.get_questions(i),
+                            quick_reply=QuickReply(items=[
+                                QuickReplyButton(action=PostbackAction(label="〇", data="〇", text="〇")),
+                                QuickReplyButton(action=PostbackAction(label="×", data="×", text="×")),
+                            ])
+                    )
+                )
+            elif message == questions.get_answer(i):
+                LINE_BOT_API.reply_message(line_reply_event.reply_token,
+                    TextSendMessage(text='正解！',
+                            quick_reply=QuickReply(items=[
+                                QuickReplyButton(action=PostbackAction(label="問題", data="問題", text="問題"))
+                            ])
+                    )
+                )
+            else:
+                LINE_BOT_API.reply_message(line_reply_event.reply_token,
+                    TextSendMessage(text='不正解！\n\n' + questions.get_comment(i),
+                            quick_reply=QuickReply(items=[
+                                QuickReplyButton(action=PostbackAction(label="問題", data="問題", text="問題"))
+                            ])
+                    )
+                )
 
     LINE_HANDLER.handle(body, signature)
     return 0

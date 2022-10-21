@@ -1,4 +1,5 @@
 import csv
+import random
 
 filename = 'questions.csv'
 
@@ -11,4 +12,11 @@ with open(filename, encoding='utf-8-sig', newline='') as f:
         ans_lists[row_num] = row
         row_num += 1
 
-
+# 乱数生成（引数：最大問題数，欲しい問題数）
+def random_generator(max_question_num, want_question_num):
+    previous = []
+    while len(previous) < want_question_num:
+        random_num = random.randint(1, max_question_num)
+        if not random_num in previous:
+            previous.append(random_num)
+    return previous

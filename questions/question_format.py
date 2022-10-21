@@ -17,5 +17,5 @@ class Question:
 
 
 # テスト用で実際の動きを以下に示します。
-questions = Question(main.ans_lists)
-print(questions.get_questions(1))
+# questions = Question(main.ans_lists)
+# print(questions.get_questions(1))
