@@ -48,7 +48,7 @@ def lambda_handler(event, context):
     def follow_message(line_follow_event):
         profile = LINE_BOT_API.get_profile(line_follow_event.source.user_id)
         logger.info(profile)
-        LINE_BOT_API.reply_message(line_follow_event.reply_token, TextSendMessage(text=f'{profile.display_name}さん、フォローありがとう!\n「問題」と送信すると問題がはじまるぞ!!'))
+        LINE_BOT_API.reply_message(line_follow_event.reply_token, TextSendMessage(text=f'{profile.display_name}さん、フォローありがとう!\n「問題」と送信すると問題がはじまります!!'))
 
 
     # メッセージイベント
