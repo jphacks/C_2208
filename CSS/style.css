@@ -1,0 +1,208 @@
+.com{
+    background-color: white;
+}
+h1 {
+    font-size: 20px;
+    padding: 40;
+    text-align: center;
+    color: black;
+    background-size: cover;
+    background-color: white;
+    opacity: 0.8;
+    font-family: "Georgia", serif;
+}
+h2 {
+    font-family: "Georgia", serif;
+    color:#a2b3d3
+}
+h3{
+    background-color: rgb(171, 171, 171);
+}
+.change {
+    font-family: "Courier", monospace;
+    font-weight: bold;
+}
+.home{
+    color: white;
+}
+.h-menu{
+    position: relative;
+}
+/*inputのcheckboxは非表示に*/
+.h-menuCheckbox {
+    display:none;
+}
+ /*ハンバーガーメニュー*/
+.h-menu_icon {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    vertical-align: middle;
+  }
+  /*3本線*/
+  .hamburger-icon, .hamburger-icon::before, .hamburger-icon::after {
+      content: '';
+      display: block;
+      position: absolute;
+      z-index: 100;
+      top:0;
+      bottom:0;
+      width: 36px;
+      height: 3px;
+      background: #0c0c0c;
+      cursor: pointer;
+  }
+  .hamburger-icon:before {
+      top: 10px;
+  }
+  .hamburger-icon:after {
+      top: 20px;
+  }
+  /*メニュー以外を暗くする*/
+  #h-menu_black {
+      display: none;
+      position: fixed;
+      z-index: 98;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #a2b3d3;
+      opacity: 1;
+      transition: .7s ease-in-out;
+  }
+  /*中身*/
+  #h-menu_content {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 99;
+      width: 100%;
+      max-width: 700px;
+      height: 100vh;
+      background: #a2b3d3;
+      overflow: auto;
+      transition: .3s ease-in-out;
+      -webkit-transform: translateX(-105%);
+      transform: translateX(-105%);
+      text-align: center;
+  }
+  /*チェックボックスにチェックが入ったら表示*/
+  input:checked ~ .h-menu_icon .hamburger-icon{
+      background: transparent;
+  }
+  input:checked ~ .h-menu_icon .hamburger-icon::before{
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      top:10px;
+      z-index:999;
+  }
+  input:checked ~ .h-menu_icon .hamburger-icon::after{
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      top:10px;
+      z-index:999;
+  }
+  input:checked ~ #h-menu_black {
+      display: block;
+      opacity: .8;
+  }
+  #h-menu_checkbox:checked ~ #h-menu_content {
+      -webkit-transform: translateX(0%);
+      transform: translateX(0%);
+      box-shadow: 6px 0 25px rgba(0,0,0,.15);
+  }
+  .h-menu_icon .hamburger-icon,
+  .h-menu_icon .hamburger-icon::before,
+  .h-menu_icon .hamburger-icon::after,
+  #h-menu_black,
+  #h-menu_content{
+      -webkit-transition: all .3s;
+      transition: all .3s;
+  }
+  #h-menu_content ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+  #h-menu_content ul li{
+      border-bottom: solid 1px white;
+  }
+  #h-menu_content li a {
+      display: block;
+      color: black;
+      font-size: 14px;
+      text-decoration: none;
+      transition-duration: 0.2s;
+  }
+  #h-menu_content li a:hover {
+      background: #455b6d;
+  }
+  .ULMenuBarFrame {
+    border: solid 1px #a2b3d3;
+    background: url('back.png');
+    background-repeat: repeat-x;
+    background-size: contain
+  }
+  
+  .ULMenuBar {
+    height: 48px;
+    width: 400px;
+    margin: 0px auto 0px auto;
+    padding: 0px 0px 0px 0px;
+  }
+  .MenuItem {
+    list-style-type: none;
+    float: left;
+    text-align: center;
+  }
+  
+  .MenuItemButtonLinkText {
+    display: block;
+    text-decoration: none;
+    border-left: solid 1px #a2b3d3;
+    border-right: solid 1px #a2b3d3;
+    height: 34px;
+    width: 198px;
+    padding: 14px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    background-image: url('back.png');
+    background-repeat: repeat-x;
+    background-size:contain
+  }
+  
+  .MenuItemButtonLinkText:active {
+    color: #24649a;
+    text-decoration: none;
+  }
+  
+  .MenuItemButtonLinkText:visited {
+    color: #24649a;
+    text-decoration: none;
+  }
+  
+  .MenuItemButtonLinkText:hover {
+    color: #24649a;
+    text-decoration: underline;
+    background-image: url('back-a.png');
+    background-repeat: repeat-x;
+    background-size: contain
+  }
+  
+  .MenuItemButtonLinkText:active {
+    color: #24649a;
+    text-decoration: none;
+    background-image: url('back-a.png');
+    background-repeat: repeat-x;
+    background-size: contain
+  }
+  .change{
+    font-family: "Georgia", serif;
+    font-weight: bold;
+  }
+  p1 {
+    font-weight: lighter;
+  }
+  .mamorukun{
+    font-size: 24px;
+  }
